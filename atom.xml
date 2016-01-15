@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[DevPeng's Blog]]></title>
+  <link href="http://www.devpeng.com/atom.xml" rel="self"/>
+  <link href="http://www.devpeng.com/"/>
+  <updated>2016-01-15T11:32:06+08:00</updated>
+  <id>http://www.devpeng.com/</id>
+  <author>
+    <name><![CDATA[DevPeng]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[项目]]></title>
+    <link href="http://www.devpeng.com/blog/2016/01/14/xiang-mu/"/>
+    <updated>2016-01-14T14:35:02+08:00</updated>
+    <id>http://www.devpeng.com/blog/2016/01/14/xiang-mu</id>
+    <content type="html"><![CDATA[<p>做iOS开发有一段时间了，近期准备把自己做的几个项目整理一下发布到自己的个人博客中。大家敬请期待&hellip;</p>
+
+<p>项目一：华商云</p>
+
+<p>项目二：赣赢通</p>
+
+<p>项目三：MBA</p>
+
+<p>项目四：蒙牛移动助理</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[作者自序]]></title>
+    <link href="http://www.devpeng.com/blog/2016/01/14/zuo-zhe-zi-xu/"/>
+    <updated>2016-01-14T14:27:13+08:00</updated>
+    <id>http://www.devpeng.com/blog/2016/01/14/zuo-zhe-zi-xu</id>
+    <content type="html"><![CDATA[<p>嗨，我是彭文杰，<br/>
+一名iOS开发者,<br/>
+生于湖北黄冈，<br/>
+学于三峡大学，<br/>
+就职于深圳。<br/></p>
+
+<p>有时候会觉得相遇就是一种缘分， <br/>
+就像此时的你我，<br/>
+通过一根抽象的网线连接起来，<br/>
+但是不管是怎样的意外，<br/>
+让你踏入了我的生活， <br/>
+此刻， <br/>
+我希望我的文字能给你带来一些帮助。</p>
+
+<p>这里是我的一个小窝， <br/>
+这里没有华丽的文字，<br/>
+这里没有疯狂的营销，<br/>
+这里只有一个普通程序员对技术的执着追求，
+和对产品的一些拙见。</p>
+
+<p>你可以通过以下方式联系我， <br/>
+新浪微博：<a href="http://weibo.com/2427202374/">@彭先僧</a>， <br/>
+简书：<a href="http://www.jianshu.com/users/4fba04903753/">@彭先僧</a>， <br/>
+github：<a href="https://github.com/pengwj">pengwj</a></p>
+]]></content>
+  </entry>
+  
+</feed>
