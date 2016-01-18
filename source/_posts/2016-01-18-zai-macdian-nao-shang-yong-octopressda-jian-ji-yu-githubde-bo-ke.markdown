@@ -213,3 +213,6 @@ Connection to github.com closed.
 
 参考文章:[http://blog.devtang.com/blog/2012/02/10/setup-blog-based-on-github/](http://blog.devtang.com/blog/2012/02/10/setup-blog-based-on-github/)
 
+
+本文写给远在北京的小黄人同学。
+
