@@ -9,13 +9,16 @@ categories:
 写的蛮不错的一篇关于MagicalRecord的文章，怕以后需要时忘记了，所以转载在自己的博客里面，原文链接如下    
 [http://childhood.logdown.com/posts/208957/easy-magicalrecord-01
 ](http://childhood.logdown.com/posts/208957/easy-magicalrecord-01
-)
+)     
+
 [http://childhood.logdown.com/posts/209933/easy-magicalrecord-02
 ](http://childhood.logdown.com/posts/209933/easy-magicalrecord-02
 )
+
 [http://childhood.logdown.com/posts/211016/easy-magicalrecord-03
 ](http://childhood.logdown.com/posts/211016/easy-magicalrecord-03
 )
+
 [http://childhood.logdown.com/posts/211076/easy-magicalrecord-04
 ](http://childhood.logdown.com/posts/211076/easy-magicalrecord-04
 )
@@ -40,7 +43,7 @@ MagicalRecord 的三个目标：
 
 #####方法1：
 
-1.从github上下载MagicalRecord源码 [MagicalRecord-Github地址](https://github.com/magicalpanda/MagicalRecord）。
+1.从github上下载MagicalRecord源码 [MagicalRecord-Github地址](https://github.com/magicalpanda/MagicalRecord)。
 
 2.将MagicalRecord文件夹拖放并添加到Xcode项目中。
 
@@ -277,15 +280,20 @@ cleanUp
 
 `NSInteger totalFat = [[CTFoodDiaryEntry MR_aggregateOperation:@"sum:" onAttribute:@"fatCalories" withPredicate:predicate] integerValue];`
 
+
 `NSInteger fattest  = [[CTFoodDiaryEntry MR_aggregateOperation:@"max:" onAttribute:@"fatCalories" withPredicate:predicate] integerValue];`
 
+
 `NSArray *caloriesByMonth = [CTFoodDiaryEntry MR_aggregateOperation:@"sum:" onAttribute:@"fatCalories" withPredicate:predicate groupBy:@"month"];`
+
 
 #####g)从指定上下文中查询
 
 `NSArray *peopleFromAnotherContext = [Person MR_findAllInContext:someOtherContext];`
 
+
 `Person *personFromContext = [Person MR_findFirstByAttribute:@"lastName" withValue:@"Gump" inContext:someOtherContext];`
+
 
 `NSUInteger count = [Person MR_numberOfEntitiesWithContext:someOtherContext];`
      
@@ -339,8 +347,12 @@ MagicalRecord 提供了一个简洁的API来操作后台线程对实体改变的
 
 `NSProcessInfo *processInfo = [NSProcessInfo processInfo];`
 
+
 `[processInfo disableSuddenTermination];`
+
+
 `[processInfo disableAutomaticTermination:@"Application is currently saving to persistent store"];`
+
 
 `[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
     //这里做存储操作
@@ -361,17 +373,36 @@ MR_save被暂时恢复到当前线程的同步运行和存储到持久存储(per
 
 `NSManagedObjectContext+MagicalSaves`
 
+
 `- (void) MR_saveOnlySelfWithCompletion:(MRSaveCompletionHandler)completion;`
+
+
 `- (void) MR_saveToPersistentStoreWithCompletion:(MRSaveCompletionHandler)completion;`
+
+
 `- (void) MR_saveOnlySelfAndWait;`
+
+
 `- (void) MR_saveToPersistentStoreAndWait;`
+
+
 `- (void) MR_saveWithOptions:(MRSaveContextOptions)mask completion:(MRSaveCompletionHandler)completion;
 MagicalRecord+Actions`
 
+
 `+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block;`
+
+
 `+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;`
+
+
 `+ (void) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;`
+
+
 `+ (void) saveUsingCurrentThreadContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;`
+
+
+
 `+ (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^)(NSManagedObjectContext *localContext))block;`
 
 ######b)标记为废弃的函数

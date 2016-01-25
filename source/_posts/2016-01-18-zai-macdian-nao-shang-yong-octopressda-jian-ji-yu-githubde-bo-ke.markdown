@@ -140,7 +140,7 @@ Connection to github.com closed.
 
 `rake setup_github_pages`
 
-弹出之后输入https://github.com/your_username/your_username.github.io,我的是https://github.com/pengwj/pengwj.github.io  
+弹出之后输入`https://github.com/your_username/your_username.github.io`,我的是`https://github.com/pengwj/pengwj.github.io`  
 
 输入以下命令部署博客
 
@@ -161,7 +161,7 @@ Connection to github.com closed.
 
 `git push origin source`
 
-部署前可以在本地预览，输入rake preview之后在浏览器输入http://localhost:4000/来访问
+部署前可以在本地预览，输入rake preview之后在浏览器输入`http://localhost:4000/`来访问
 
 ##4.写博客   
 通过命令     
