@@ -4,7 +4,7 @@
   <title><![CDATA[DevPeng's Blog]]></title>
   <link href="http://www.devpeng.com/atom.xml" rel="self"/>
   <link href="http://www.devpeng.com/"/>
-  <updated>2016-01-18T23:46:35+08:00</updated>
+  <updated>2016-01-25T09:52:53+08:00</updated>
   <id>http://www.devpeng.com/</id>
   <author>
     <name><![CDATA[DevPeng]]></name>
@@ -12,6 +12,407 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[转载]深入浅出MagicalRecord]]></title>
+    <link href="http://www.devpeng.com/blog/2016/01/21/zhuan-zai-shen-ru-qian-chu-magicalrecord/"/>
+    <updated>2016-01-21T13:53:55+08:00</updated>
+    <id>http://www.devpeng.com/blog/2016/01/21/zhuan-zai-shen-ru-qian-chu-magicalrecord</id>
+    <content type="html"><![CDATA[<p>写的蛮不错的一篇关于MagicalRecord的文章，怕以后需要时忘记了，所以转载在自己的博客里面，原文链接如下  <br/>
+<a href="http://childhood.logdown.com/posts/208957/easy-magicalrecord-01">http://childhood.logdown.com/posts/208957/easy-magicalrecord-01
+</a>
+<a href="http://childhood.logdown.com/posts/209933/easy-magicalrecord-02">http://childhood.logdown.com/posts/209933/easy-magicalrecord-02
+</a>
+<a href="http://childhood.logdown.com/posts/211016/easy-magicalrecord-03">http://childhood.logdown.com/posts/211016/easy-magicalrecord-03
+</a>
+<a href="http://childhood.logdown.com/posts/211076/easy-magicalrecord-04">http://childhood.logdown.com/posts/211076/easy-magicalrecord-04
+</a></p>
+
+<hr />
+
+<h2>一、深入浅出MagicalRecord-02</h2>
+
+<h3>1、CoreData与MagicalRecord</h3>
+
+<p>在 ios 开发中，我们会使用CoreData来进行数据持久化。但是在使用CoreData进行存取等操作时，代码量相对较多。而 MagicalRecord 正是为方便操作 CoreData 而生。</p>
+
+<p>MagicalRecord 的三个目标：</p>
+
+<p>1.简化 CoreData 相关代码 <br/>
+2.清晰、简单、单行获取数据  <br/>
+3.当需要优化请求的时候，仍然允许修改 NSFetchRequest</p>
+
+<h5><a href="https://github.com/magicalpanda/MagicalRecord">MagicalRecord-Github地址</a></h5>
+
+<hr />
+
+<h3>2、 安装配置</h3>
+
+<h5>方法1：</h5>
+
+<p>1.从github上下载MagicalRecord源码 [MagicalRecord-Github地址](<a href="https://github.com/magicalpanda/MagicalRecord%EF%BC%89%E3%80%82">https://github.com/magicalpanda/MagicalRecord%EF%BC%89%E3%80%82</a></p>
+
+<p>2.将MagicalRecord文件夹拖放并添加到Xcode项目中。</p>
+
+<p>3.添加 CoreData.framework。</p>
+
+<p>4.在项目的预编译头文件中（PCH）中导入CoreData+MagicalRecord.h。或者在将要使用的类中单独导入。</p>
+
+<p>5.开始编码。</p>
+
+<h5>方法2：</h5>
+
+<p>1.如果已经安装了CocoaPods（不清楚CocoaPods使用的朋友们可以看唐巧的这篇<a href="http://blog.devtang.com/blog/2014/05/25/use-cocoapod-to-manage-ios-lib-dependency/">用CocoaPods做iOS程序的依赖管理</a>）。</p>
+
+<p>在终端中输入pod search MagicalRecord，结果如下：</p>
+
+<p>复制pod &lsquo;MagicalRecord&rsquo;, &lsquo;~> 2.2'到项目中的Podfile并保存文件。命令行cd到工程根目录下，并执行pod install。</p>
+
+<p>2.以下步骤同方法1的3、4、5步骤。</p>
+
+<p>注意：
+如果你在使用 MagicalRecord 方法的时候不想带前缀MR_（比如用 findAll 代替 MR_findAll），只需在PCH文件中，在CoreData+MagicalRecord.h之前增加#defin MR_SHORTHAND即可。</p>
+
+<hr />
+
+<h3>3.环境需求</h3>
+
+<p>iOS SDK 6.x 及以上
+OS X SDK 10.8 及以上
+使用Xcode5来运行github仓库中包含的测试Tests，但MagicalRecord库建立在Xcode4上。</p>
+
+<h2>二、深入浅出MagicalRecord-02</h2>
+
+<p>这一节我们一起粗略的了解下 CoreData 中的一些核心概念以及 MagicalRecord 的入门准备。只有对 CoreData 理解深入了，才能更轻松的使用 MagicalRecord。</p>
+
+<h3>1、CoreData 的核心概念</h3>
+
+<p>先上两幅关键的概念图</p>
+
+<h4>(1)NSManagedObjectModel 托管对象模型（MOM）</h4>
+
+<p>这个MOM由实体描述对象，即NSEntityDescription实例的集合组成，实体描述对象介绍见下面第7条。</p>
+
+<p>作用：添加实体的属性，建立属性之间的关系</p>
+
+<h4>(2)NSManagedObjectContext 托管对象上下文（MOC）</h4>
+
+<p>在概念图2中，托管对象上下文（MOC）通过持久化存储协调器（PSC）从持久化存储（NSPersistentStore）中获取对象时，这些对象会形成一个临时副本在MOC中形成一个对象集合，该对象集合包含了对象以及对象彼此之间的一些关系。我们可以对这些副本进行修改，然后进行保存，然后MOC会通过 PSC 对 NSPersistentStore 进行操作，持久化存储就会发生变化。</p>
+
+<p>CoreData中的NSManagedObjectModel 托管对象的数据模型（MOM），通过 MOC 进行注册。MOC有插入、删除以及更新数据模型等操作，并提供了撤销和重做的支持。</p>
+
+<p>作用：插入数据，更新数据，删除数据</p>
+
+<h4>(3)NSPersistentStoreCoordinator 持久化存储协调器（PSC）</h4>
+
+<p>在应用程序和外部数据存储的对象之间提供访问通道的框架对象集合统称为持久化堆栈（persistence stack）。在堆栈顶部的是托管对象上下文（MOC），在堆栈底部的是持久化对象存储（persistent object stores）。在托管对象上下文和持久化对象存储之间便是持久化存储协调器（PSC）。应用程序通过类NSPersistentStoreCoordinator的实例访问持久化对象存储。</p>
+
+<p>持久化存储协调器为一或多个托管对象上下文提供一个访问接口，使其下层的多个持久化存储可以表现为单一一个聚合存储。一个托管对象上下文可以基于持久化存储协调器下的所有数据存储来创建一个对象图。持久化存储协调器只能与一个托管对象模型（MOM）相关联。</p>
+
+<h4>(4)NSManagedObject 托管对象（MO）</h4>
+
+<p>托管对象必须继承自NSManagedObject或者NSManagedObject的子类。NSManagedObject能够表述任何实体。它使用一个私有的内部存储，以维护其属性，并实现托管对象所需的所有基本行为。托管对象有一个指向实体描述的引用。NSEntityDescription 实体描述表述了实体的元数据，包括实体的名称，实体的属性和实体之间的关系。</p>
+
+<h4>(5)Controller 控制器</h4>
+
+<p>概念图1中绿色的 Array Controller，Object Controller，Tree Controller 这些控制器，一般都是通过 control+drag 将 Managed Object Context 绑定到它们，这样我们就可以在 nib 中可视化地操作数据</p>
+
+<h4>(6)NSFetchRequest 获取数据请求</h4>
+
+<p>使用托管对象上下文来检索数据时，会创建一个获取请求（fetch request）。类似Sql查询语句的功能。</p>
+
+<h4>(7)NSEntityDescription 实体描述</h4>
+
+<p>实体描述对象提供了一个实体的元数据，包括实体名（Name），类名（ClassName），属性（Properties）以及实体属性与其他实体的一些关系（Relationships）等。</p>
+
+<h4>(8).xcdatamodeld</h4>
+
+<p>里面是.xcdatamodeld文件，用数据模型编辑器编辑，编译后为.momd或.mom文件。</p>
+
+<p>我们可以选中我们的应用程序（路径类似为/Users/Childhood/Library/Application Support/iPhone Simulator/7.1/Applications/005D926F-5763-4305-97FE-AE55FE7281A4），右键显示包内容，我们看到是这样的。</p>
+
+<p>我们着重理解下他们之间的协同工作关系。</p>
+
+<p>这里有一个简单的demo <a href="https://github.com/dabing1022/CoreDataDemo">CoreDataDemo</a>。</p>
+
+<p>结合图示和代码，我们来看下他们的运作机制（下面参考<a href="http://blog.csdn.net/kesalin/article/details/6739319">罗朝辉（飘飘白云）[Cocoa]深入浅出 Cocoa 之 Core Data（1）- 框架详解</a>)</p>
+
+<p>1.应用程序先创建或读取模型文件（后缀为xcdatamodeld）生成 NSManagedObjectModel 对象。 <br/>
+2.生成 NSManagedObjectContext 和 NSPersistentStoreCoordinator 对象，MOC会设置自身的持久化存储协调器(PSC)，通过PSC来对数据文件进行读写。 <br/>
+3.NSPersistentStoreCoordinator 负责从数据文件(xml，sqlite，二进制文件等)中读取数据生成 Managed Object，或保存 Managed Object 写入数据文件。  <br/>
+4.NSManagedObjectContext 参与对数据进行各种操作的整个过程，它可以持有多个 Managed Object。我们通过它来监测 Managed Object。监测数据对象有两个作用：支持 undo/redo 以及数据绑定。  <br/>
+5.Array Controller，Object Controller，Tree Controller 这些控制器一般与 NSManagedObjectContext 关联，因此我们可以通过它们在 nib 中可视化地操作数据对象</p>
+
+<h3>2.MagicalRecord的入门准备</h3>
+
+<p>如上篇提到的，在工程的PCH预编译头文件中导入CoreData+MagicalRecord.h文件。因为该头文件包括了所有需要的MagicalRecord头文件。</p>
+
+<p>在我们的app delegate中，或者在awakeFromNib中都可以，我们可以使用下列的方法来设置CoreData堆栈。</p>
+
+<p>setup系列方法</p>
+
+<ul>
+<li>(void) setupCoreDataStack;</li>
+<li>(void) setupAutoMigratingCoreDataStack;</li>
+<li>(void) setupCoreDataStackWithInMemoryStore;</li>
+<li>(void) setupCoreDataStackWithStoreNamed:(NSString *)storeName;</li>
+<li>(void) setupCoreDataStackWithAutoMigratingSqliteStoreNamed:(NSString *)storeName;</li>
+</ul>
+
+
+<p>通过调用上面的方法，我们就可以实例化一块CoreData堆栈，并且为该实例提供 getter 和 setter 方法。</p>
+
+<p>需要注意的一点是，当我们的编译器在 DEBUG 模式下（DEBUG的flag为1），如果改变了定义的数据模型而没有创建新的数据模型，那么 MagicalRecord 则会删除老的存储并且会自动创建一份新的，不用在每次改变的时候进行卸载/重新安装。</p>
+
+<p>在我们的app退出时，我们可以使用下面这个方法来做清理工作。</p>
+
+<p>cleanUp <br/>
+[MagicalRecord cleanUp];</p>
+
+<h3>3. 参考学习</h3>
+
+<p><a href="https://github.com/magicalpanda/MagicalRecord/blob/develop/Docs/GettingStarted.md">MagicalRecord的官方资料</a>   <br/>
+<a href="http://cocoadevcentral.com/articles/000086.php">CoreDataClassOverview</a> <br/>
+<a href="http://www.cnblogs.com/xiaodao/archive/2012/10/08/2715477.html">iphone数据存储之 – Core Data的使用</a>  <br/>
+<a href="http://blog.csdn.net/kesalin/article/details/6739319">[Cocoa]深入浅出 Cocoa 之 Core Data（1）- 框架详解</a></p>
+
+<h2>三、深入浅出MagicalRecord-03</h2>
+
+<p>这节我们来一起学习下MagicalRecord对数据的增删改查，内容主要来自于 MagicalRecord的github资料。</p>
+
+<h3>1. 增-创建实体</h3>
+
+<p>创建实体</p>
+
+<p><code>Person *myPerson = [Person MR_createEntity];</code></p>
+
+<p>指定创建的上下文中创建实体</p>
+
+<p><code>Person *myPerson = [Person MR_createInContext:otherContext];</code></p>
+
+<h3>2. 删-删除实体</h3>
+
+<p>删除一个实体</p>
+
+<p><code>[myPerson MR_deleteEntity];</code></p>
+
+<p>删除特定上下文中的实体</p>
+
+<p><code>[myPerson MR_deleteInContext:otherContext];</code></p>
+
+<p>删除所有实体</p>
+
+<p><code>[Person MR_truncateAll];</code></p>
+
+<p>删除特定上下文中的所有实体</p>
+
+<p><code>[Person MR_truncateAllInContext:otherContext];</code></p>
+
+<h3>3. 改-修改实体</h3>
+
+<p><code>Person *person = ...;</code></p>
+
+<p><code>person.lastname = "xxx";</code></p>
+
+<h3>4. 查-查询实体</h3>
+
+<p>查询的结果通常会返回一个NSArray结果。</p>
+
+<h5>a) 基本查询</h5>
+
+<p>从持久化存储（PersistantStore）中查询出所有的Person实体</p>
+
+<p><code>NSArray *people = [Person MR_findAll];</code></p>
+
+<p>查询出所有的Person实体并按照 lastName 升序（ascending）排列</p>
+
+<p><code>NSArray *peopleSorted = [Person MR_findAllSortedBy:@"lastName" ascending:YES];</code></p>
+
+<p>查询出所有的Person实体并按照 lastName 和 firstName 升序（ascending）排列</p>
+
+<p><code>NSArray *peopleSorted = [Person MR_findAllSortedBy:@"lastName,firstName" ascending:YES];</code></p>
+
+<p>查询出所有的Person实体并按照 lastName 降序，firstName 升序（ascending）排列</p>
+
+<p><code>NSArray *peopleSorted = [Person MR_findAllSortedBy:@"lastName:NO,firstName" ascending:YES];</code></p>
+
+<p>//或者</p>
+
+<p><code>NSArray *peopleSorted = [Person MR_findAllSortedBy:@"lastName,firstName:YES" ascending:NO];</code></p>
+
+<p>查询出所有的Person实体 firstName 为 Forrest 的实体</p>
+
+<p><code>Person *person = [Person MR_findFirstByAttribute:@"firstName" withValue:@"Forrest"];</code></p>
+
+<h5>b) 高级查询</h5>
+
+<p>使用NSPredicate来实现高级查询。</p>
+
+<p><code>NSPredicate *peopleFilter = [NSPredicate predicateWithFormat:@"department IN %@", @[dept1, dept2]];</code></p>
+
+<p><code>NSArray *people = [Person MR_findAllWithPredicate:peopleFilter];</code></p>
+
+<h5>c)返回 NSFetchRequest</h5>
+
+<p><code>NSPredicate *peopleFilter = [NSPredicate predicateWithFormat:@"department IN %@", departments];</code></p>
+
+<p><code>NSFetchRequest *people = [Person MR_requestAllWithPredicate:peopleFilter];</code></p>
+
+<h5>d)自定义 NSFetchRequest</h5>
+
+<p><code>NSPredicate *peopleFilter = [NSPredicate predicateWithFormat:@"department IN %@", departments];</code></p>
+
+<p><code>NSFetchRequest *peopleRequest = [Person MR_requestAllWithPredicate:peopleFilter];</code></p>
+
+<p><code>[peopleRequest setReturnsDistinctResults:NO];</code></p>
+
+<p><code>[peopleRequest setReturnPropertiesNamed:@[@"firstName", @"lastName"]];</code></p>
+
+<p><code>NSArray *people = [Person MR_executeFetchRequest:peopleRequest];</code></p>
+
+<h5>e)查询实体的个数</h5>
+
+<p>返回的是 NSNumber 类型</p>
+
+<p><code>NSNumber *count = [Person MR_numberOfEntities];</code></p>
+
+<p>基于NSPredicate查询条件过滤后的实体个数</p>
+
+<p><code>NSNumber *count = [Person MR_numberOfEntitiesWithPredicate:...];</code></p>
+
+<p>返回的是 NSUInteger 类型</p>
+
+<ul>
+<li>(NSUInteger) MR_countOfEntities;</li>
+<li>(NSUInteger) MR_countOfEntitiesWithContext:(NSManagedObjectContext *)context;</li>
+<li>(NSUInteger) MR_countOfEntitiesWithPredicate:(NSPredicate *)searchFilter;</li>
+<li>(NSUInteger) MR_countOfEntitiesWithPredicate:(NSPredicate <em>)searchFilter inContext:(NSManagedObjectContext </em>)
+
+<h5>f)合计操作</h5></li>
+</ul>
+
+
+<p><code>NSInteger totalFat = [[CTFoodDiaryEntry MR_aggregateOperation:@"sum:" onAttribute:@"fatCalories" withPredicate:predicate] integerValue];</code></p>
+
+<p><code>NSInteger fattest  = [[CTFoodDiaryEntry MR_aggregateOperation:@"max:" onAttribute:@"fatCalories" withPredicate:predicate] integerValue];</code></p>
+
+<p><code>NSArray *caloriesByMonth = [CTFoodDiaryEntry MR_aggregateOperation:@"sum:" onAttribute:@"fatCalories" withPredicate:predicate groupBy:@"month"];</code></p>
+
+<h5>g)从指定上下文中查询</h5>
+
+<p><code>NSArray *peopleFromAnotherContext = [Person MR_findAllInContext:someOtherContext];</code></p>
+
+<p><code>Person *personFromContext = [Person MR_findFirstByAttribute:@"lastName" withValue:@"Gump" inContext:someOtherContext];</code></p>
+
+<p><code>NSUInteger count = [Person MR_numberOfEntitiesWithContext:someOtherContext];</code></p>
+
+<h2>四、深入浅出MagicalRecord-04</h2>
+
+<p>这节我们来一起学习下 MagicalRecord 对数据的存储，内容主要来自于 MagicalRecord的github资料。</p>
+
+<h3>存储的时机</h3>
+
+<p>一般情况下，我们应该在数据发生变化时就进行存储操作。有些应用选择在退出的时候存储，然而在大多数情况下这是不必要的。事实上，如果你只是当应用退出的时候进行存储，你有可能会丢失数据！如果你的应用崩溃了呢？用户会丢失他们改变的数据，这是很糟糕的体验，应该极力去避免出现这种情况。</p>
+
+<p>如果你发现存储比较耗时，有下面几点你可以考虑下：</p>
+
+<h5>1.利用后台线程存储</h5>
+
+<p>MagicalRecord 提供了一个简洁的API来操作后台线程对实体改变的存储。例如：</p>
+
+<p><code>[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    //在这里做存储工作，该闭包代码块的工作将会在后台线程运行
+} completion:^(BOOL success, NSError *error) {
+    [application endBackgroundTask:bgTask];
+    bgTask = UIBackgroundTaskInvalid;
+}];</code></p>
+
+<h5>2.将存储任务拆分成细小的存储</h5>
+
+<p>类似导入大量数据这样的任务应该被拆分成多个小模块。一次性存储多少量的数据并没有统一的标准，所以你需要使用 Apple’s Instruments 的来测试下你的应用的性能。</p>
+
+<h3>处理长时存储</h3>
+
+<h5>ios平台</h5>
+
+<p>当退出 ios 应用时，有机会来整理和存储数据到磁盘上。如果你知道存储操作要持续一会，那么最好的方法就是请求应用延期退出。如下：</p>
+
+<p><code>UIApplication *application = [UIApplication sharedApplication];</code></p>
+
+<p><code>__block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
+    [application endBackgroundTask:bgTask];
+    bgTask = UIBackgroundTaskInvalid;
+}];</code></p>
+
+<p><code>[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    //这里做存储操作
+} completion:^(BOOL success, NSError *error) {
+    [application endBackgroundTask:bgTask];
+    bgTask = UIBackgroundTaskInvalid;
+}];</code></p>
+
+<p>请确保认真阅读了 <a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIApplication_Class/index.html">read the documentation for beginBackgroundTaskWithExpirationHandler</a>，因为不适当或者不必要的延长应用程序的生命周期可能会在审核的时候遭到拒绝。</p>
+
+<h5>OSX平台</h5>
+
+<p>在 OS X Mavericks (10.9) 以及后面的版本中，App Nap 可以使得应用在后台的时候可以有效的被终止退出。如果你知道存储操作要持续一会，那么最好的方法就是暂时禁用自动终止和突然终止功能（前提是你的应用支持这些功能）：</p>
+
+<p><code>NSProcessInfo *processInfo = [NSProcessInfo processInfo];</code></p>
+
+<p><code>[processInfo disableSuddenTermination];</code>
+<code>[processInfo disableAutomaticTermination:@"Application is currently saving to persistent store"];</code></p>
+
+<p><code>[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
+    //这里做存储操作
+} completion:^(BOOL success, NSError *error) {
+    [processInfo enableSuddenTermination];
+    [processInfo enableAutomaticTermination:@"Application has finished saving to the persistent store"];
+}];</code></p>
+
+<p>和 ios 实现一样，在实现之前确保阅读 <a href="https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSProcessInfo_Class/index.html">read the documentation on NSProcessInfo</a>来避免被拒绝。</p>
+
+<h5>变化</h5>
+
+<p>在 MagicalRecord 2.2 中，存储API更加一致并遵循CoreData的命名模式。在这个版本中，已经加入了自动化测试来确保将来更新时，存储工作（新的API和废弃的API）能够继续工作。</p>
+
+<p>MR_save被暂时恢复到当前线程的同步运行和存储到持久存储(persistent store)的原始状态。然而，MR_save方法被标记为“将被废弃”(deprecated)，将会在下个大版本 MagicalRecord 3.0 中移除掉。你应该使用MR_saveToPersistentStoreAndWait同功能函数来替代它。</p>
+
+<h6>a)新的方法</h6>
+
+<p>新增加了下面几个方法：</p>
+
+<p><code>NSManagedObjectContext+MagicalSaves</code></p>
+
+<p><code>- (void) MR_saveOnlySelfWithCompletion:(MRSaveCompletionHandler)completion;</code>
+<code>- (void) MR_saveToPersistentStoreWithCompletion:(MRSaveCompletionHandler)completion;</code>
+<code>- (void) MR_saveOnlySelfAndWait;</code>
+<code>- (void) MR_saveToPersistentStoreAndWait;</code>
+<code>- (void) MR_saveWithOptions:(MRSaveContextOptions)mask completion:(MRSaveCompletionHandler)completion;
+MagicalRecord+Actions</code></p>
+
+<p><code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block;</code>
+<code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code>
+<code>+ (void) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;</code>
+<code>+ (void) saveUsingCurrentThreadContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code>
+<code>+ (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^)(NSManagedObjectContext *localContext))block;</code></p>
+
+<h6>b)标记为废弃的函数</h6>
+
+<p>下面这些函数被标记为“废弃的”，将会在 MagicalRecord 3.0 版本移除掉，推荐使用替代的函数。</p>
+
+<p><code>NSManagedObjectContext+MagicalSaves</code></p>
+
+<p><code>- (void) MR_save;</code>
+<code>- (void) MR_saveWithErrorCallback:(void(^)(NSError *error))errorCallback;</code>
+<code>- (void) MR_saveInBackgroundCompletion:(void (^)(void))completion;</code>
+<code>- (void) MR_saveInBackgroundErrorHandler:(void (^)(NSError *error))errorCallback;</code>
+<code>- (void) MR_saveInBackgroundErrorHandler:(void (^)(NSError *error))errorCallback completion:(void (^)(void))completion;</code>
+<code>- (void) MR_saveNestedContexts;</code>
+<code>- (void) MR_saveNestedContextsErrorHandler:(void (^)(NSError *error))errorCallback;</code>
+<code>- (void) MR_saveNestedContextsErrorHandler:(void (^)(NSError *error))errorCallback completion:(void (^)(void))completion;
+MagicalRecord+Actions</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在Mac电脑上用Octopress搭建基于github的博客]]></title>
