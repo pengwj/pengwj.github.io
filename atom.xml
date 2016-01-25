@@ -4,7 +4,7 @@
   <title><![CDATA[DevPeng's Blog]]></title>
   <link href="http://www.devpeng.com/atom.xml" rel="self"/>
   <link href="http://www.devpeng.com/"/>
-  <updated>2016-01-25T09:52:53+08:00</updated>
+  <updated>2016-01-25T16:01:57+08:00</updated>
   <id>http://www.devpeng.com/</id>
   <author>
     <name><![CDATA[DevPeng]]></name>
@@ -20,12 +20,15 @@
     <id>http://www.devpeng.com/blog/2016/01/21/zhuan-zai-shen-ru-qian-chu-magicalrecord</id>
     <content type="html"><![CDATA[<p>写的蛮不错的一篇关于MagicalRecord的文章，怕以后需要时忘记了，所以转载在自己的博客里面，原文链接如下  <br/>
 <a href="http://childhood.logdown.com/posts/208957/easy-magicalrecord-01">http://childhood.logdown.com/posts/208957/easy-magicalrecord-01
-</a>
-<a href="http://childhood.logdown.com/posts/209933/easy-magicalrecord-02">http://childhood.logdown.com/posts/209933/easy-magicalrecord-02
-</a>
-<a href="http://childhood.logdown.com/posts/211016/easy-magicalrecord-03">http://childhood.logdown.com/posts/211016/easy-magicalrecord-03
-</a>
-<a href="http://childhood.logdown.com/posts/211076/easy-magicalrecord-04">http://childhood.logdown.com/posts/211076/easy-magicalrecord-04
+</a></p>
+
+<p><a href="http://childhood.logdown.com/posts/209933/easy-magicalrecord-02">http://childhood.logdown.com/posts/209933/easy-magicalrecord-02
+</a></p>
+
+<p><a href="http://childhood.logdown.com/posts/211016/easy-magicalrecord-03">http://childhood.logdown.com/posts/211016/easy-magicalrecord-03
+</a></p>
+
+<p><a href="http://childhood.logdown.com/posts/211076/easy-magicalrecord-04">http://childhood.logdown.com/posts/211076/easy-magicalrecord-04
 </a></p>
 
 <hr />
@@ -50,7 +53,7 @@
 
 <h5>方法1：</h5>
 
-<p>1.从github上下载MagicalRecord源码 [MagicalRecord-Github地址](<a href="https://github.com/magicalpanda/MagicalRecord%EF%BC%89%E3%80%82">https://github.com/magicalpanda/MagicalRecord%EF%BC%89%E3%80%82</a></p>
+<p>1.从github上下载MagicalRecord源码 <a href="https://github.com/magicalpanda/MagicalRecord">MagicalRecord-Github地址</a>。</p>
 
 <p>2.将MagicalRecord文件夹拖放并添加到Xcode项目中。</p>
 
@@ -359,8 +362,9 @@ OS X SDK 10.8 及以上
 
 <p><code>NSProcessInfo *processInfo = [NSProcessInfo processInfo];</code></p>
 
-<p><code>[processInfo disableSuddenTermination];</code>
-<code>[processInfo disableAutomaticTermination:@"Application is currently saving to persistent store"];</code></p>
+<p><code>[processInfo disableSuddenTermination];</code></p>
+
+<p><code>[processInfo disableAutomaticTermination:@"Application is currently saving to persistent store"];</code></p>
 
 <p><code>[MagicalRecord saveWithBlock:^(NSManagedObjectContext *localContext) {
     //这里做存储操作
@@ -383,18 +387,26 @@ OS X SDK 10.8 及以上
 
 <p><code>NSManagedObjectContext+MagicalSaves</code></p>
 
-<p><code>- (void) MR_saveOnlySelfWithCompletion:(MRSaveCompletionHandler)completion;</code>
-<code>- (void) MR_saveToPersistentStoreWithCompletion:(MRSaveCompletionHandler)completion;</code>
-<code>- (void) MR_saveOnlySelfAndWait;</code>
-<code>- (void) MR_saveToPersistentStoreAndWait;</code>
-<code>- (void) MR_saveWithOptions:(MRSaveContextOptions)mask completion:(MRSaveCompletionHandler)completion;
+<p><code>- (void) MR_saveOnlySelfWithCompletion:(MRSaveCompletionHandler)completion;</code></p>
+
+<p><code>- (void) MR_saveToPersistentStoreWithCompletion:(MRSaveCompletionHandler)completion;</code></p>
+
+<p><code>- (void) MR_saveOnlySelfAndWait;</code></p>
+
+<p><code>- (void) MR_saveToPersistentStoreAndWait;</code></p>
+
+<p><code>- (void) MR_saveWithOptions:(MRSaveContextOptions)mask completion:(MRSaveCompletionHandler)completion;
 MagicalRecord+Actions</code></p>
 
-<p><code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block;</code>
-<code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code>
-<code>+ (void) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;</code>
-<code>+ (void) saveUsingCurrentThreadContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code>
-<code>+ (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^)(NSManagedObjectContext *localContext))block;</code></p>
+<p><code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block;</code></p>
+
+<p><code>+ (void) saveWithBlock:(void(^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code></p>
+
+<p><code>+ (void) saveWithBlockAndWait:(void(^)(NSManagedObjectContext *localContext))block;</code></p>
+
+<p><code>+ (void) saveUsingCurrentThreadContextWithBlock:(void (^)(NSManagedObjectContext *localContext))block completion:(MRSaveCompletionHandler)completion;</code></p>
+
+<p><code>+ (void) saveUsingCurrentThreadContextWithBlockAndWait:(void (^)(NSManagedObjectContext *localContext))block;</code></p>
 
 <h6>b)标记为废弃的函数</h6>
 
@@ -553,7 +565,7 @@ Connection to github.com closed.</p>
 
 <p><code>rake setup_github_pages</code></p>
 
-<p>弹出之后输入<a href="https://github.com/your_username/your_username.github.io,%E6%88%91%E7%9A%84%E6%98%AFhttps://github.com/pengwj/pengwj.github.io">https://github.com/your_username/your_username.github.io,%E6%88%91%E7%9A%84%E6%98%AFhttps://github.com/pengwj/pengwj.github.io</a></p>
+<p>弹出之后输入<code>https://github.com/your_username/your_username.github.io</code>,我的是<code>https://github.com/pengwj/pengwj.github.io</code></p>
 
 <p>输入以下命令部署博客</p>
 
@@ -574,7 +586,7 @@ Connection to github.com closed.</p>
 
 <p><code>git push origin source</code></p>
 
-<p>部署前可以在本地预览，输入rake preview之后在浏览器输入<a href="http://localhost:4000/%E6%9D%A5%E8%AE%BF%E9%97%AE">http://localhost:4000/%E6%9D%A5%E8%AE%BF%E9%97%AE</a></p>
+<p>部署前可以在本地预览，输入rake preview之后在浏览器输入<code>http://localhost:4000/</code>来访问</p>
 
 <h2>4.写博客</h2>
 
